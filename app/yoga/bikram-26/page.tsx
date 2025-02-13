@@ -35,24 +35,46 @@ export default function Bikram26Page() {
           <p className="text-xl text-earth-200">{t.subtitle}</p>
         </motion.section>
 
-        {/* Audio Player Section */}
-        <motion.section variants={fadeInUp} className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
-          <h2 className="text-2xl font-semibold text-earth-100">{t.audioGuide.title}</h2>
-          <p className="text-earth-300 mb-4">{t.audioGuide.description}</p>
-          <div className="w-full">
-            <audio 
-              controls 
-              className="w-full"
-              controlsList="nodownload"
-            >
-              <source 
-                src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//yoga_series_26_full_2024_06_18.mp3" 
-                type="audio/mpeg" 
-              />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
-        </motion.section>
+        {/* Audio Players Grid */}
+        <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Full Spanish Audio Player Section */}
+          <motion.section className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+            <h2 className="text-2xl font-semibold text-earth-100">{t.audioGuide.title}</h2>
+            <p className="text-earth-300 mb-4">{t.audioGuide.description}</p>
+            <div className="w-full">
+              <audio 
+                controls 
+                className="w-full"
+                controlsList="nodownload"
+              >
+                <source 
+                  src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//yoga_series_26_full_2024_06_18.mp3" 
+                  type="audio/mpeg" 
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </motion.section>
+
+          {/* Short English Audio Player Section */}
+          <motion.section className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+            <h2 className="text-2xl font-semibold text-earth-100">{t.shortAudioGuide.title}</h2>
+            <p className="text-earth-300 mb-4">{t.shortAudioGuide.description}</p>
+            <div className="w-full">
+              <audio 
+                controls 
+                className="w-full"
+                controlsList="nodownload"
+              >
+                <source 
+                  src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//Yoga+Practice+30+Mins.mp3"
+                  type="audio/mpeg" 
+                />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </motion.section>
+        </motion.div>
 
         {/* Information Section */}
         <motion.section variants={fadeInUp} className="space-y-8">

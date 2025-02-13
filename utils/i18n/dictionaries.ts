@@ -49,6 +49,10 @@ export const dictionaries = {
         title: 'Audio Guide (Spanish)',
         description: 'Listen to the complete 90-minute class instruction in Spanish'
       },
+      shortAudioGuide: {
+        title: 'Quick Practice (English)',
+        description: 'A shorter 30-minute version with one set of each posture'
+      },
       about: {
         title: 'About the Practice',
         description1: 'The Bikram yoga series consists of 26 postures and 2 breathing exercises, performed in a specific sequence in a heated room. This systematic practice is designed to work every part of the body, giving all internal organs, veins, ligaments, and muscles everything they need to maintain optimum health.',
@@ -127,6 +131,10 @@ export const dictionaries = {
       audioGuide: {
         title: 'Guía de Audio (Español)',
         description: 'Escucha la instrucción completa de la clase de 90 minutos en español'
+      },
+      shortAudioGuide: {
+        title: 'Práctica Rápida (Inglés)',
+        description: 'Una versión más corta de 30 minutos con una serie de cada postura'
       },
       about: {
         title: 'Sobre la Práctica',
