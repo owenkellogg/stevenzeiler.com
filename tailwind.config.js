@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,6 +8,45 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        forest: {
+          50: '#f3f8f3',
+          100: '#e0eee0',
+          200: '#c4dfc4',
+          300: '#9cc79c',
+          400: '#70a870',
+          500: '#4f8c4f',
+          600: '#3d703d',
+          700: '#335a33',
+          800: '#2c482c',
+          900: '#263c26',
+          950: '#121f12',
+        },
+        earth: {
+          50: '#faf6f3',
+          100: '#f2e9e1',
+          200: '#e5d3c3',
+          300: '#d4b69d',
+          400: '#c39274',
+          500: '#b67a57',
+          600: '#a66548',
+          700: '#8b503c',
+          800: '#724235',
+          900: '#5e372e',
+          950: '#321b16',
+        },
+        leaf: {
+          50: '#f2f8f4',
+          100: '#e0f0e5',
+          200: '#c2e0cc',
+          300: '#95c7a7',
+          400: '#64a77e',
+          500: '#438960',
+          600: '#326d4a',
+          700: '#2a583d',
+          800: '#244733',
+          900: '#1f3c2c',
+          950: '#0f2017',
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         btn: {

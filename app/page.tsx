@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import ImageGallery from '@/components/ImageGallery';
+import HeroGallery from '@/components/HeroGallery';
+import { useLanguage } from '@/utils/i18n/LanguageProvider';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -18,29 +21,13 @@ const staggerContainer = {
 };
 
 export default function Home() {
+  const { dictionary } = useLanguage();
+  const t = dictionary.home;
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-forest-950 to-earth-950 text-earth-50">
       {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative h-[60vh] flex items-center justify-center bg-gradient-to-b from-blue-900 to-gray-950"
-      >
-        <div className="text-center space-y-4 p-4">
-          <motion.h1
-            {...fadeInUp}
-            className="text-4xl md:text-6xl font-bold"
-          >
-            Steven Zeiler
-          </motion.h1>
-          <motion.p
-            {...fadeInUp}
-            className="text-xl md:text-2xl text-gray-300"
-          >
-            Meditation & Yoga Guide
-          </motion.p>
-        </div>
-      </motion.section>
+      <HeroGallery />
 
       {/* Content Sections */}
       <motion.div
@@ -54,32 +41,32 @@ export default function Home() {
           variants={fadeInUp}
           className="space-y-8"
         >
-          <h2 className="text-3xl font-bold">Meditation Guides</h2>
+          <h2 className="text-3xl font-bold text-earth-100">{t.meditationTitle}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Zen Meditation */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">Zen Meditation</h3>
-              <p className="text-gray-400">Discover the art of mindfulness and presence through Zen meditation practices.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Watch Guide
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.zenMeditation.title}</h3>
+              <p className="text-earth-300">{t.zenMeditation.description}</p>
+              <button className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.zenMeditation.cta}
               </button>
             </div>
 
             {/* Philosophical Experiences */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">Philosophical Experiences</h3>
-              <p className="text-gray-400">Explore deep insights and transformative experiences through meditation.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Listen Now
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.philosophicalExperiences.title}</h3>
+              <p className="text-earth-300">{t.philosophicalExperiences.description}</p>
+              <button className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.philosophicalExperiences.cta}
               </button>
             </div>
 
             {/* Training Programs */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">Training Programs</h3>
-              <p className="text-gray-400">Structured programs to deepen your meditation practice.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Join Program
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.trainingPrograms.title}</h3>
+              <p className="text-earth-300">{t.trainingPrograms.description}</p>
+              <button className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.trainingPrograms.cta}
               </button>
             </div>
           </div>
@@ -90,35 +77,44 @@ export default function Home() {
           variants={fadeInUp}
           className="space-y-8"
         >
-          <h2 className="text-3xl font-bold">Yoga Practice</h2>
+          <h2 className="text-3xl font-bold text-earth-100">{t.yogaTitle}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Bikram Yoga */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">Bikram Yoga</h3>
-              <p className="text-gray-400">Experience the transformative power of hot yoga practice.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Start Practice
-              </button>
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.bikramYoga.title}</h3>
+              <p className="text-earth-300">{t.bikramYoga.description}</p>
+              <Link href="/yoga/bikram-26" className="inline-block bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.bikramYoga.cta}
+              </Link>
             </div>
 
             {/* Senior Yoga */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">Yoga for Seniors</h3>
-              <p className="text-gray-400">Gentle and effective yoga practices adapted for seniors.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                View Classes
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.seniorYoga.title}</h3>
+              <p className="text-earth-300">{t.seniorYoga.description}</p>
+              <button className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.seniorYoga.cta}
               </button>
             </div>
 
             {/* General Yoga */}
-            <div className="bg-gray-900 rounded-lg p-6 space-y-4">
-              <h3 className="text-xl font-semibold">General Yoga</h3>
-              <p className="text-gray-400">Comprehensive yoga practices for all skill levels.</p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Explore
+            <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+              <h3 className="text-xl font-semibold text-earth-100">{t.generalYoga.title}</h3>
+              <p className="text-earth-300">{t.generalYoga.description}</p>
+              <button className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors">
+                {t.generalYoga.cta}
               </button>
             </div>
           </div>
+        </motion.section>
+
+        {/* Additional Images */}
+        <motion.section
+          variants={fadeInUp}
+          className="space-y-8"
+        >
+          <h2 className="text-3xl font-bold text-earth-100">{t.imagesTitle}</h2>
+          <ImageGallery />
         </motion.section>
 
         {/* Join Section */}
@@ -126,15 +122,15 @@ export default function Home() {
           variants={fadeInUp}
           className="text-center space-y-6 py-12"
         >
-          <h2 className="text-3xl font-bold">Join Our Community</h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Begin your journey of self-discovery and transformation with our meditation and yoga practices.
+          <h2 className="text-3xl font-bold text-earth-100">{t.joinCommunity.title}</h2>
+          <p className="text-xl text-earth-200 max-w-2xl mx-auto">
+            {t.joinCommunity.description}
           </p>
           <Link
             href="/auth/sign-up"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold"
+            className="inline-block bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-8 py-3 rounded-lg text-lg font-semibold transition-colors"
           >
-            Get Started
+            {t.joinCommunity.cta}
           </Link>
         </motion.section>
       </motion.div>
