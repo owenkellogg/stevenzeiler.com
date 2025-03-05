@@ -79,7 +79,206 @@ export const dictionaries = {
           'Breathe normally throughout the practice',
           'Stay in the room even if you need to rest'
         ]
+      },
+      practice: {
+        title: 'Bikram 26 Practice',
+        subtitle: 'Follow along with the complete sequence',
+        startButton: 'Start Practice',
+        pauseButton: 'Pause',
+        resumeButton: 'Resume',
+        nextButton: 'Next Posture',
+        prevButton: 'Previous Posture',
+        timeRemaining: 'Time Remaining',
+        postures: [
+          {
+            id: '1-pranayama',
+            name: 'Pranayama',
+            sanskritName: 'Pranayama',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '2-half-moon',
+            name: 'Half Moon Pose with Hands to Feet',
+            sanskritName: 'Ardha Chandrasana with Pada-Hastasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '3-awkward',
+            name: 'Awkward Pose',
+            sanskritName: 'Utkatasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '4-eagle',
+            name: 'Eagle Pose',
+            sanskritName: 'Garurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '5-standing-head-to-knee',
+            name: 'Standing Head to Knee',
+            sanskritName: 'Dandayamana-Janushirasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '6-standing-bow',
+            name: 'Standing Bow Pulling Pose',
+            sanskritName: 'Dandayamana-Dhanurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '7-balancing-stick',
+            name: 'Balancing Stick Pose',
+            sanskritName: 'Tuladandasana',
+            duration: 60,
+            sets: 2
+          },
+          {
+            id: '8-standing-separate-leg-stretching',
+            name: 'Standing Separate Leg Stretching Pose',
+            sanskritName: 'Dandayamana Bibhaktapada Paschimottanasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '9-triangle',
+            name: 'Triangle Pose',
+            sanskritName: 'Trikonasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '10-standing-separate-leg-head-to-knee',
+            name: 'Standing Separate Leg Head to Knee Pose',
+            sanskritName: 'Dandayamana Bibhaktapada Janushirasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '11-tree',
+            name: 'Tree Pose',
+            sanskritName: 'Tadasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '12-toe-stand',
+            name: 'Toe Stand Pose',
+            sanskritName: 'Padangustasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '13-corpse',
+            name: 'Corpse Pose',
+            sanskritName: 'Savasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '14-wind-removing',
+            name: 'Wind Removing Pose',
+            sanskritName: 'Pavanamuktasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '15-sit-up',
+            name: 'Sit Up',
+            sanskritName: '',
+            duration: 60,
+            sets: 1
+          },
+          {
+            id: '16-cobra',
+            name: 'Cobra Pose',
+            sanskritName: 'Bhujangasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '17-locust',
+            name: 'Locust Pose',
+            sanskritName: 'Salabhasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '18-full-locust',
+            name: 'Full Locust Pose',
+            sanskritName: 'Poorna-Salabhasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '19-bow',
+            name: 'Bow Pose',
+            sanskritName: 'Dhanurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '20-fixed-firm',
+            name: 'Fixed Firm Pose',
+            sanskritName: 'Supta-Vajrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '21-half-tortoise',
+            name: 'Half Tortoise Pose',
+            sanskritName: 'Ardha-Kurmasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '22-camel',
+            name: 'Camel Pose',
+            sanskritName: 'Ustrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '23-rabbit',
+            name: 'Rabbit Pose',
+            sanskritName: 'Sasangasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '24-head-to-knee-and-stretching',
+            name: 'Head to Knee Pose and Stretching Pose',
+            sanskritName: 'Janushirasana and Paschimottanasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '25-spine-twisting',
+            name: 'Spine Twisting Pose',
+            sanskritName: 'Ardha-Matsyendrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '26-blowing-in-firm',
+            name: 'Blowing in Firm Pose',
+            sanskritName: 'Kapalbhati in Vajrasana',
+            duration: 120,
+            sets: 1
+          }
+        ]
       }
+    },
+    navigation: {
+      home: 'Home',
+      bikram26: 'Bikram 26',
+      practice: 'Practice'
     }
   },
   es: {
@@ -162,7 +361,206 @@ export const dictionaries = {
           'Respira normalmente durante toda la práctica',
           'Permanece en la sala incluso si necesitas descansar'
         ]
+      },
+      practice: {
+        title: 'Práctica de Bikram 26',
+        subtitle: 'Sigue la secuencia completa',
+        startButton: 'Comenzar Práctica',
+        pauseButton: 'Pausar',
+        resumeButton: 'Continuar',
+        nextButton: 'Siguiente Postura',
+        prevButton: 'Postura Anterior',
+        timeRemaining: 'Tiempo Restante',
+        postures: [
+          {
+            id: '1-pranayama',
+            name: 'Pranayama',
+            sanskritName: 'Pranayama',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '2-half-moon',
+            name: 'Pose de la Media Luna con las Manos a los Pies',
+            sanskritName: 'Ardha Chandrasana con Pada-Hastasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '3-awkward',
+            name: 'Postura Incómoda',
+            sanskritName: 'Utkatasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '4-eagle',
+            name: 'Postura del Águila',
+            sanskritName: 'Garurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '5-standing-head-to-knee',
+            name: 'De Pie de la Cabeza a la Rodilla',
+            sanskritName: 'Dandayamana-Janushirasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '6-standing-bow',
+            name: 'Postura de Tirar del Arco de Pie',
+            sanskritName: 'Dandayamana-Dhanurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '7-balancing-stick',
+            name: 'Pose de Palo en Equilibrio',
+            sanskritName: 'Tuladandasana',
+            duration: 60,
+            sets: 2
+          },
+          {
+            id: '8-standing-separate-leg-stretching',
+            name: 'Pose de Estiramiento de Piernas Separadas de Pie',
+            sanskritName: 'Dandayamana Bibhaktapada Paschimottanasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '9-triangle',
+            name: 'Pose de Triángulo',
+            sanskritName: 'Trikonasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '10-standing-separate-leg-head-to-knee',
+            name: 'Pose de Pie con las Piernas Separadas y la Frente Hacia la Rodilla',
+            sanskritName: 'Dandayamana Bibhaktapada Janushirasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '11-tree',
+            name: 'Postura del Árbol',
+            sanskritName: 'Tadasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '12-toe-stand',
+            name: 'Postura del Pie Sobre los Dedos',
+            sanskritName: 'Padangustasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '13-corpse',
+            name: 'Postura del Cuerpo Muerto',
+            sanskritName: 'Savasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '14-wind-removing',
+            name: 'Postura de Remoción del Viento',
+            sanskritName: 'Pavanamuktasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '15-sit-up',
+            name: 'Sentarse',
+            sanskritName: '',
+            duration: 60,
+            sets: 1
+          },
+          {
+            id: '16-cobra',
+            name: 'Postura de la Cobra',
+            sanskritName: 'Bhujangasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '17-locust',
+            name: 'Posición de la Langosta',
+            sanskritName: 'Salabhasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '18-full-locust',
+            name: 'Posición de la Langosta Completa',
+            sanskritName: 'Poorna-Salabhasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '19-bow',
+            name: 'Posición del Arco',
+            sanskritName: 'Dhanurasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '20-fixed-firm',
+            name: 'Pose Inclinada Sobre los Talones',
+            sanskritName: 'Supta-Vajrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '21-half-tortoise',
+            name: 'Postura de Media Tortuga',
+            sanskritName: 'Ardha-Kurmasana',
+            duration: 120,
+            sets: 1
+          },
+          {
+            id: '22-camel',
+            name: 'Postura del Camello',
+            sanskritName: 'Ustrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '23-rabbit',
+            name: 'Postura del Conejo',
+            sanskritName: 'Sasangasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '24-head-to-knee-and-stretching',
+            name: 'Postura de Cabeza a Rodilla y Estiramiento',
+            sanskritName: 'Janushirasana and Paschimottanasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '25-spine-twisting',
+            name: 'Postura de Torsión de Columna',
+            sanskritName: 'Ardha-Matsyendrasana',
+            duration: 120,
+            sets: 2
+          },
+          {
+            id: '26-blowing-in-firm',
+            name: 'Postura de Soplar Firme',
+            sanskritName: 'Kapalbhati in Vajrasana',
+            duration: 120,
+            sets: 1
+          }
+        ]
       }
+    },
+    navigation: {
+      home: 'Inicio',
+      bikram26: 'Bikram 26',
+      practice: 'Práctica'
     }
   }
 }; 

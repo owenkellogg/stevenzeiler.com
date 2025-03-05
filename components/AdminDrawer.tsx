@@ -22,7 +22,9 @@ export default function AdminDrawer() {
   };
 
   const links = [
-    { href: '/', label: 'Home', icon: '🏠' },
+    { href: '/', label: 'Home', icon: '��' },
+    { href: '/people', label: 'People', icon: '👥' },
+    { href: '/organizations', label: 'Organizations', icon: '🏢' },
     { href: '/residences', label: 'Residences', icon: '🏛️' },
     { href: '/journal', label: 'Journal', icon: '📔' },
   ];
