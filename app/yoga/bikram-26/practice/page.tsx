@@ -358,16 +358,42 @@ export default function Bikram26PracticePage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const instructionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const gongAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [isOnline, setIsOnline] = useState(true);
+  const [audioLoaded, setAudioLoaded] = useState(false);
 
   // Initialize audio on client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Set online status
+      setIsOnline(navigator.onLine);
+      
+      // Listen for online/offline events
+      window.addEventListener('online', () => setIsOnline(true));
+      window.addEventListener('offline', () => setIsOnline(false));
+      
+      // Initialize audio
       gongAudioRef.current = new Audio('https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//gong-79191.mp3');
       gongAudioRef.current.preload = 'auto';
+      
+      // Check if audio is loaded
+      gongAudioRef.current.addEventListener('canplaythrough', () => {
+        setAudioLoaded(true);
+      });
+      
+      // Handle audio loading error
+      gongAudioRef.current.addEventListener('error', (e) => {
+        console.error('Error loading audio:', e);
+        setAudioLoaded(false);
+      });
+      
+      return () => {
+        window.removeEventListener('online', () => setIsOnline(true));
+        window.removeEventListener('offline', () => setIsOnline(false));
+      };
     }
   }, []);
 
-  // Function to play gong sound
+  // Function to play gong sound with fallback
   const playGongSound = () => {
     if (gongAudioRef.current) {
       // Reset the audio to the beginning if it's already playing
@@ -377,6 +403,8 @@ export default function Bikram26PracticePage() {
       // Play the gong sound
       gongAudioRef.current.play().catch(error => {
         console.error('Error playing gong sound:', error);
+        // If audio fails, we could provide visual feedback instead
+        // For example, flash the screen or show a notification
       });
     }
   };
@@ -555,6 +583,13 @@ export default function Bikram26PracticePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900 dark:to-green-950 text-green-900 dark:text-green-50">
       <div className="container mx-auto px-4 py-8">
+        {/* Network status indicator */}
+        {!isOnline && (
+          <div className="bg-amber-600 text-white px-4 py-2 rounded-lg mb-4 text-center">
+            You are currently offline. The practice will continue to work, but some features may be limited.
+          </div>
+        )}
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

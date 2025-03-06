@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 import AdminDrawer from '@/components/AdminDrawer';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import Navigation from '@/components/Navigation';
+import Script from 'next/script';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -61,6 +62,8 @@ export default async function RootLayout({
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png" />
         <meta name="theme-color" content="#065f46" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className={`${GeistSans.className} bg-gray-950 text-gray-100`}>
         <ThemeProvider>
@@ -73,6 +76,7 @@ export default async function RootLayout({
             </main>
           </LanguageProvider>
         </ThemeProvider>
+        <Script src="/register-sw.js" strategy="afterInteractive" />
       </body>
     </html>
   );
