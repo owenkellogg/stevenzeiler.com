@@ -16,6 +16,18 @@ export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Steven Zeiler - Meditation & Yoga",
   description: "Zen meditation, yoga, and spiritual guidance by Steven Zeiler",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Steven Zeiler - Yoga & Meditation",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default async function RootLayout({
@@ -44,6 +56,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="dark">
+      <head>
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png" />
+        <meta name="theme-color" content="#065f46" />
+      </head>
       <body className={`${GeistSans.className} bg-gray-950 text-gray-100`}>
         <ThemeProvider>
           <LanguageProvider>
