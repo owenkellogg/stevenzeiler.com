@@ -68,7 +68,7 @@ export default function Bikram26Page() {
                 <h3 className="font-bold mb-2">{dict.audioGuide.title}</h3>
                 <p className="text-sm mb-3">{dict.audioGuide.description}</p>
                 <audio controls className="w-full">
-                  <source src="https://ufzfbwxnlcjxwpwdxjar.supabase.co/storage/v1/object/public/audio/bikram-90-english.mp3" type="audio/mpeg" />
+                  <source src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//yoga_series_26_full_2024_06_18.mp3" type="audio/mpeg" />
                   Your browser does not support the audio element.
                 </audio>
               </div>

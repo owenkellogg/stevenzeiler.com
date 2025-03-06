@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/utils/i18n/LanguageProvider';
 import { dictionaries } from '@/utils/i18n/dictionaries';
+import Image from 'next/image';
 
 // Define the posture instructions
 const postureInstructions: Record<string, { instructions: string[] }> = {
@@ -278,6 +279,68 @@ const postureInstructions: Record<string, { instructions: string[] }> = {
   }
 };
 
+// Define the sprite positions for each posture in the chart
+// The chart is 8 columns by 4 rows
+const postureSprites: Record<string, { positions: Array<{ row: number; col: number }> }> = {
+  '1-pranayama': { 
+    positions: [
+      { row: 0, col: 0 },
+      { row: 0, col: 1 }
+    ]
+  },
+  '2-half-moon': { 
+    positions: [
+      { row: 0, col: 2 },
+      { row: 0, col: 3 },
+      { row: 0, col: 4 }
+    ]
+  },
+  '3-awkward': { 
+    positions: [
+      { row: 0, col: 5 },
+      { row: 0, col: 6 }
+    ] 
+  },
+  '4-eagle': { positions: [{ row: 0, col: 7 }] },
+  '5-standing-head-to-knee': { positions: [{ row: 1, col: 0 }] },
+  '6-standing-bow': { positions: [{ row: 1, col: 1 }] },
+  '7-balancing-stick': { positions: [{ row: 1, col: 2 }] },
+  '8-standing-separate-leg-stretching': { positions: [{ row: 1, col: 3 }] },
+  '9-triangle': { 
+    positions: [
+      { row: 1, col: 4 },
+      { row: 1, col: 5 }
+    ] 
+  },
+  '10-standing-separate-leg-head-to-knee': { positions: [{ row: 1, col: 6 }] },
+  '11-tree': { positions: [{ row: 1, col: 7 }] },
+  '12-toe-stand': { positions: [{ row: 2, col: 0 }] },
+  '13-corpse': { positions: [{ row: 2, col: 1 }] },
+  '14-wind-removing': { positions: [{ row: 2, col: 2 }] },
+  '15-sit-up': { positions: [{ row: 2, col: 3 }] },
+  '16-cobra': { positions: [{ row: 2, col: 4 }] },
+  '17-locust': { 
+    positions: [
+      { row: 2, col: 5 },
+      { row: 2, col: 6 }
+    ] 
+  },
+  '18-full-locust': { positions: [{ row: 2, col: 7 }] },
+  '19-bow': { positions: [{ row: 3, col: 0 }] },
+  '20-fixed-firm': { positions: [{ row: 3, col: 1 }] },
+  '21-half-tortoise': { positions: [{ row: 3, col: 2 }] },
+  '22-camel': { positions: [{ row: 3, col: 3 }] },
+  '23-rabbit': { positions: [{ row: 3, col: 4 }] },
+  '24-head-to-knee-and-stretching': { 
+    positions: [
+      { row: 3, col: 5 },
+      { row: 3, col: 6 }
+    ] 
+  },
+  '25-spine-twisting': { positions: [{ row: 3, col: 7 }] },
+  '26-blowing-in-firm': { positions: [{ row: 4, col: 0 }] }
+};
+
 export default function Bikram26PracticePage() {
   const { language } = useLanguage();
   const dict = dictionaries[language].bikram26.practice;
@@ -294,6 +357,29 @@ export default function Bikram26PracticePage() {
   const [currentInstructionIndex, setCurrentInstructionIndex] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const instructionTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const gongAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize audio on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      gongAudioRef.current = new Audio('https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//gong-79191.mp3');
+      gongAudioRef.current.preload = 'auto';
+    }
+  }, []);
+
+  // Function to play gong sound
+  const playGongSound = () => {
+    if (gongAudioRef.current) {
+      // Reset the audio to the beginning if it's already playing
+      gongAudioRef.current.pause();
+      gongAudioRef.current.currentTime = 0;
+      
+      // Play the gong sound
+      gongAudioRef.current.play().catch(error => {
+        console.error('Error playing gong sound:', error);
+      });
+    }
+  };
 
   // Get current posture
   const currentPosture = dict.postures[currentPostureIndex];
@@ -301,6 +387,15 @@ export default function Bikram26PracticePage() {
   // Get current posture instructions
   const currentPostureInstructions = currentPosture ? 
     postureInstructions[currentPosture.id]?.instructions || [] : [];
+
+  // Get current posture sprite positions
+  const currentSpritePositions = currentPosture ? 
+    postureSprites[currentPosture.id]?.positions || [{ row: 0, col: 0 }] : [{ row: 0, col: 0 }];
+
+  // Calculate sprite size
+  const spriteSize = 400; // Size of each sprite in the original image
+  const spriteWidth = 400;
+  const spriteHeight = 420;
 
   // Calculate total practice time
   const totalPracticeTime = dict.postures.reduce((total, posture) => {
@@ -311,6 +406,9 @@ export default function Bikram26PracticePage() {
   useEffect(() => {
     if (isStarted && !isPaused) {
       if (timeRemaining === 0) {
+        // Play gong sound for transition
+        playGongSound();
+        
         // Move to next posture or set
         if (currentSet < currentPosture.sets) {
           // Move to next set of the same posture
@@ -386,6 +484,9 @@ export default function Bikram26PracticePage() {
 
   // Start practice
   const startPractice = () => {
+    // Play gong sound to start the practice
+    playGongSound();
+    
     setIsStarted(true);
     setIsPaused(false);
     setCurrentPostureIndex(0);
@@ -404,6 +505,9 @@ export default function Bikram26PracticePage() {
   // Navigate to previous posture
   const goToPreviousPosture = () => {
     if (currentPostureIndex > 0) {
+      // Play gong sound for manual transition
+      playGongSound();
+      
       const prevIndex = currentPostureIndex - 1;
       setCurrentPostureIndex(prevIndex);
       setCurrentSet(1);
@@ -416,6 +520,9 @@ export default function Bikram26PracticePage() {
   // Navigate to next posture
   const goToNextPosture = () => {
     if (currentPostureIndex < dict.postures.length - 1) {
+      // Play gong sound for manual transition
+      playGongSound();
+      
       const nextIndex = currentPostureIndex + 1;
       setCurrentPostureIndex(nextIndex);
       setCurrentSet(1);
@@ -517,6 +624,32 @@ export default function Bikram26PracticePage() {
                 </div>
                 <div className="text-lg">
                   {caption}
+                </div>
+              </div>
+
+              {/* Posture Image Display */}
+              <div className="flex justify-center mb-6">
+                <div className={`grid ${currentSpritePositions.length > 1 ? 'grid-cols-2 gap-2' : 'grid-cols-1'} max-w-[520px]`}>
+                  {currentSpritePositions.map((position, index) => (
+                    <div 
+                      key={index}
+                      className="relative w-[250px] h-[250px] overflow-hidden rounded-lg border-4 border-green-200 dark:border-green-700 shadow-lg"
+                    >
+                      <div 
+                        className="absolute"
+                        style={{
+                          width: '400px',
+                          height: '400px',
+                          backgroundImage: 'url(https://3.bp.blogspot.com/-1X6EpjRVQp4/Uyhlcz96gZI/AAAAAAAAAUw/xJ0s6nv8eSU/s3200/bikram+poses.jpg)',
+                          backgroundPosition: `${-position.col * spriteWidth}px ${-position.row * spriteHeight}px`,
+                          transform: 'scale(0.625)', // Scale to fit 400px sprite into 250px container
+                          transformOrigin: 'top left',
+                          backgroundSize: '3200px 1600px', // Ensure the background image is sized correctly
+                          backgroundRepeat: 'no-repeat'
+                        }}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
 
