@@ -54,7 +54,7 @@ export default function ResidenceDetailsPage() {
       const { data: residence, error } = await supabase
         .from('residences')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', params?.id as string)
         .single();
 
       if (error || !residence) {
@@ -73,7 +73,7 @@ export default function ResidenceDetailsPage() {
     };
 
     checkUserAndLoadData();
-  }, [params.id, router, supabase]);
+  }, [params?.id, router, supabase]);
 
   const handleUpdate = async () => {
     if (!residence || !editForm) return;
