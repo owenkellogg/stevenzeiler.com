@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/utils/i18n/LanguageProvider';
 import { dictionaries } from '@/utils/i18n/dictionaries';
 import Image from 'next/image';
+import PostureAudioPlayer from '@/components/PostureAudioPlayer';
+import { PostureAudioPlayerSettings } from '@/types/posture-audio';
 
 // Define the posture instructions
 const postureInstructions: Record<string, { instructions: string[] }> = {
@@ -360,6 +362,12 @@ export default function Bikram26PracticePage() {
   const gongAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isOnline, setIsOnline] = useState(true);
   const [audioLoaded, setAudioLoaded] = useState(false);
+  const [audioSettings, setAudioSettings] = useState<PostureAudioPlayerSettings>({
+    enabled: false,
+    volume: 0.7,
+    language: language
+  });
+  const [currentAudioPostureId, setCurrentAudioPostureId] = useState<string | null>(null);
 
   // Initialize audio on client side
   useEffect(() => {
@@ -386,12 +394,34 @@ export default function Bikram26PracticePage() {
         setAudioLoaded(false);
       });
       
+      // Initialize audio settings from localStorage if available
+      const savedSettings = localStorage.getItem('postureAudioSettings');
+      if (savedSettings) {
+        try {
+          const parsedSettings = JSON.parse(savedSettings);
+          setAudioSettings(prev => ({
+            ...prev,
+            ...parsedSettings,
+            language: parsedSettings.language || language
+          }));
+        } catch (err) {
+          console.error('Error parsing saved audio settings:', err);
+        }
+      }
+      
       return () => {
         window.removeEventListener('online', () => setIsOnline(true));
         window.removeEventListener('offline', () => setIsOnline(false));
       };
     }
-  }, []);
+  }, [language]);
+  
+  // Save audio settings to localStorage when they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('postureAudioSettings', JSON.stringify(audioSettings));
+    }
+  }, [audioSettings]);
 
   // Function to play gong sound with fallback
   const playGongSound = () => {
@@ -453,10 +483,16 @@ export default function Bikram26PracticePage() {
             setTimeRemaining(dict.postures[nextIndex].duration);
             updateCaption(nextIndex, 1);
             setCurrentInstructionIndex(0); // Reset instruction index for new posture
+            
+            // Update current audio posture ID
+            if (audioSettings.enabled) {
+              setCurrentAudioPostureId(dict.postures[nextIndex].id);
+            }
           } else {
             // Practice completed
             setIsStarted(false);
             setCaption('Practice completed!');
+            setCurrentAudioPostureId(null);
           }
         }
       } else {
@@ -478,7 +514,7 @@ export default function Bikram26PracticePage() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [isStarted, isPaused, timeRemaining, currentPostureIndex, currentSet, currentPosture, totalElapsedTime]);
+  }, [isStarted, isPaused, timeRemaining, currentPostureIndex, currentSet, currentPosture, totalElapsedTime, audioSettings.enabled]);
 
   // Effect to cycle through instructions
   useEffect(() => {
@@ -523,6 +559,13 @@ export default function Bikram26PracticePage() {
     setTotalElapsedTime(0);
     setCurrentInstructionIndex(0);
     updateCaption(0, 1);
+    
+    // Set initial audio posture ID
+    if (audioSettings.enabled) {
+      setCurrentAudioPostureId(dict.postures[0].id);
+    } else {
+      setCurrentAudioPostureId(null);
+    }
   };
 
   // Toggle pause
@@ -542,6 +585,11 @@ export default function Bikram26PracticePage() {
       setTimeRemaining(dict.postures[prevIndex].duration);
       setCurrentInstructionIndex(0);
       updateCaption(prevIndex, 1);
+      
+      // Update current audio posture ID
+      if (audioSettings.enabled) {
+        setCurrentAudioPostureId(dict.postures[prevIndex].id);
+      }
     }
   };
 
@@ -557,6 +605,11 @@ export default function Bikram26PracticePage() {
       setTimeRemaining(dict.postures[nextIndex].duration);
       setCurrentInstructionIndex(0);
       updateCaption(nextIndex, 1);
+      
+      // Update current audio posture ID
+      if (audioSettings.enabled) {
+        setCurrentAudioPostureId(dict.postures[nextIndex].id);
+      }
     }
   };
 
@@ -578,6 +631,29 @@ export default function Bikram26PracticePage() {
   // Navigate to specific posture page
   const navigateToPosturePage = (postureId: string) => {
     router.push(`/yoga/bikram-26/practice/${postureId}`);
+  };
+
+  // Update audio settings
+  const handleAudioSettingsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setAudioSettings(prev => ({ ...prev, [name]: checked }));
+      
+      // Update current audio posture ID based on enabled state
+      if (name === 'enabled') {
+        if (checked && isStarted) {
+          setCurrentAudioPostureId(currentPosture.id);
+        } else {
+          setCurrentAudioPostureId(null);
+        }
+      }
+    } else if (type === 'range') {
+      setAudioSettings(prev => ({ ...prev, [name]: parseFloat(value) }));
+    } else {
+      setAudioSettings(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -608,6 +684,61 @@ export default function Bikram26PracticePage() {
             transition={{ delay: 0.3 }}
             className="flex flex-col items-center justify-center space-y-8"
           >
+            <div className="bg-white dark:bg-green-800 rounded-xl shadow-lg p-6 w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4 border-b border-green-200 dark:border-green-700 pb-2">
+                Practice Settings
+              </h3>
+              
+              <div className="mb-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="enabled"
+                    checked={audioSettings.enabled}
+                    onChange={handleAudioSettingsChange}
+                    className="mr-2"
+                  />
+                  <span>Enable Audio Instructions</span>
+                </label>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Play audio instructions for each posture
+                </p>
+              </div>
+              
+              {audioSettings.enabled && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Language</label>
+                    <select
+                      name="language"
+                      value={audioSettings.language}
+                      onChange={handleAudioSettingsChange}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                    </select>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">
+                      Volume: {Math.round(audioSettings.volume * 100)}%
+                    </label>
+                    <input
+                      type="range"
+                      name="volume"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={audioSettings.volume}
+                      onChange={handleAudioSettingsChange}
+                      className="w-full"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            
             <button
               onClick={startPractice}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transition-all transform hover:scale-105"
@@ -811,6 +942,29 @@ export default function Bikram26PracticePage() {
           </motion.div>
         )}
       </div>
+      
+      {isStarted && (
+        <>
+          {/* Gong sound for transitions */}
+          <audio 
+            ref={gongAudioRef} 
+            preload="auto" 
+            style={{ display: 'none' }} 
+          />
+          
+          {/* Audio player for posture instructions - only render when currentAudioPostureId is set */}
+          {currentAudioPostureId && (
+            <PostureAudioPlayer
+              key={`audio-${currentAudioPostureId}-${currentSet}`} // Add key to force re-render
+              postureId={currentAudioPostureId}
+              language={audioSettings.language}
+              enabled={audioSettings.enabled}
+              volume={audioSettings.volume}
+              isPaused={isPaused}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 } 

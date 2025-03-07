@@ -119,7 +119,9 @@ self.addEventListener('fetch', (event) => {
   }
   
   // Special handling for audio files - Cache first, then network
-  if (event.request.url.includes('.mp3')) {
+  if (event.request.url.includes('.mp3') || 
+      event.request.url.includes('.wav') || 
+      event.request.url.includes('posture_audio')) {
     event.respondWith(
       caches.open(AUDIO_CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((response) => {

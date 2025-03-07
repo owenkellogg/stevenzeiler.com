@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/utils/i18n/LanguageProvider';
 import { dictionaries } from '@/utils/i18n/dictionaries';
+import PostureAudioRecorder from '@/components/PostureAudioRecorder';
 
 // Define the posture instructions
 const postureInstructions: Record<string, { instructions: string[], benefits: string[] }> = {
@@ -556,6 +557,8 @@ export default function PosturePage({ params }: { params: { postureId: string } 
             </Link>
           )}
         </div>
+
+        <PostureAudioRecorder postureId={params.postureId} />
       </div>
     </div>
   );
