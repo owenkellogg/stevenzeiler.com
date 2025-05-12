@@ -121,7 +121,7 @@ export default function AuthStatus() {
                 ) : (
                   <div className="py-1">
                     <Link 
-                      href="/login"
+                      href="/auth/sign-in"
                       className="block px-4 py-2 text-sm text-earth-200 hover:bg-forest-700/50 rounded-md hover:text-earth-50"
                       onClick={() => setIsMenuOpen(false)}
                     >

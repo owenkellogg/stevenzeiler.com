@@ -33,7 +33,10 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url));
+      // Redirect to our processing page with the next destination as a query parameter
+      return NextResponse.redirect(
+        new URL(`/auth/callback-processing?next=/auth/sign-in-success`, request.url)
+      );
     }
   }
 
