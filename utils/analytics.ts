@@ -17,6 +17,8 @@ export interface AnalyticsEventProperties {
   scheduledTime?: string;
   source?: string;
   duration?: number;
+  audioTitle?: string;
+  audioUrl?: string;
   [key: string]: any; // Allow additional custom properties
 }
 
@@ -30,9 +32,14 @@ export function trackEvent(
   // Check if running in browser
   if (typeof window === 'undefined') return;
   
-  // Check if Vercel Analytics is available
-  if (typeof window.va !== 'undefined') {
-    window.va?.event(eventName, properties);
+  // Track with Vercel Analytics if available
+  if (typeof window.va === 'function') {
+    try {
+      // @ts-ignore - Ignoring type issues with Vercel Analytics
+      window.va('event', eventName, properties);
+    } catch (error) {
+      console.error('Error tracking event:', error);
+    }
   } else {
     // Fallback for debugging when Vercel Analytics is not loaded
     console.log(`[Analytics Event] ${eventName}`, properties);
@@ -42,11 +49,10 @@ export function trackEvent(
 // Declare the Vercel Analytics type for TypeScript
 declare global {
   interface Window {
-    va?: {
-      event: (
-        eventName: string,
-        properties?: {[key: string]: any}
-      ) => void;
-    };
+    va?: (
+      event: 'event' | 'beforeSend' | 'pageview',
+      eventName?: string,
+      properties?: {[key: string]: any}
+    ) => void;
   }
 } 
