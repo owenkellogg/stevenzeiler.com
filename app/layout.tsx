@@ -8,6 +8,13 @@ import AdminDrawer from '@/components/AdminDrawer';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import Navigation from '@/components/Navigation';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
+import { Analytics } from '@vercel/analytics/react';
+
+// Dynamically import AuthStatus to avoid hydration issues
+const AuthStatus = dynamic(() => import('@/components/AuthStatus'), {
+  ssr: false,
+});
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -72,11 +79,13 @@ export default async function RootLayout({
               {isAdmin && <AdminDrawer />}
               <Navigation />
               <LanguageSwitcher />
+              <AuthStatus />
               <div className="flex-1">{children}</div>
             </main>
           </LanguageProvider>
         </ThemeProvider>
         <Script src="/register-sw.js" strategy="afterInteractive" />
+        <Analytics />
       </body>
     </html>
   );

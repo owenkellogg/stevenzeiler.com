@@ -293,4 +293,47 @@ self.addEventListener('fetch', (event) => {
         });
     })
   );
+});
+
+// Listen for messages from the page
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'PLAY_AUDIO') {
+    // This event is received when it's time to play the audio
+    const audioUrl = event.data.url;
+    
+    // Notify all clients that it's time to play
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'AUDIO_START',
+          url: audioUrl
+        });
+      });
+    });
+  }
+});
+
+// Cache audio files for offline use
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  
+  // Handle audio file requests
+  if (url.pathname.endsWith('.mp3')) {
+    event.respondWith(
+      caches.open('audio-cache').then(cache => {
+        return cache.match(event.request).then(response => {
+          if (response) {
+            // Return cached response
+            return response;
+          }
+          
+          // Fetch and cache
+          return fetch(event.request).then(networkResponse => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        });
+      })
+    );
+  }
 }); 
