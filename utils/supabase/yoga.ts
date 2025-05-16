@@ -203,4 +203,28 @@ export async function updateClassStatus(
     console.error('Error updating class status:', error);
     throw error;
   }
-} 
+}
+
+// Fetch past yoga classes (with class type information)
+export async function fetchPastYogaClasses(limit: number = 10, offset: number = 0): Promise<YogaScheduledClassWithType[]> {
+  const supabase = createClient();
+  
+  const { data, error } = await supabase
+    .from('yoga_scheduled_classes')
+    .select(`
+      *,
+      yoga_class_type:yoga_class_types!class_type_id(*)
+    `)
+    .lt('scheduled_start_time', new Date().toISOString())
+    // Show all past classes regardless of status
+    .order('scheduled_start_time', { ascending: false })
+    .limit(limit)
+    .range(offset, offset + limit - 1);
+    
+  if (error) {
+    console.error('Error fetching past yoga classes:', error);
+    throw error;
+  }
+  
+  return data;
+}

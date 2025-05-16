@@ -17,8 +17,23 @@ export default function AccountPage() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [classesAttended, setClassesAttended] = useState(0);
+  const [practiceMinutes, setPracticeMinutes] = useState(0);
   const [nextClass, setNextClass] = useState<any>(null);
   const router = useRouter();
+  
+  // Define interface for class data
+  interface ClassParticipation {
+    id: string;
+    scheduled_class_id: string;
+    scheduled_class: {
+      scheduled_start_time: string;
+      yoga_class_type: {
+        duration_minutes: number;
+        name?: string;
+      };
+      id?: string;
+    };
+  }
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -40,37 +55,95 @@ export default function AccountPage() {
 
         // Get user's class participation stats - this might fail if the table doesn't exist yet
         try {
-          const { count: attendedCount } = await supabase
-            .from('yoga_class_participants')
-            .select('*', { count: 'exact' })
-            .eq('user_id', user.id);
-          
-          if (attendedCount !== null) {
-            setClassesAttended(attendedCount);
-          }
-
-          // Get next upcoming class the user is registered for
           const now = new Date().toISOString();
-          const { data: upcomingClass } = await supabase
-            .from('yoga_scheduled_classes')
+          
+          // Count ONLY past classes as "attended"
+          const { data: participatedClasses } = await supabase
+            .from('yoga_class_participants')
             .select(`
               id,
-              scheduled_start_time,
-              yoga_class_type (
-                name,
-                duration_minutes
-              ),
-              yoga_class_participants (
-                id
+              scheduled_class_id,
+              scheduled_class:yoga_scheduled_classes!scheduled_class_id(
+                scheduled_start_time,
+                yoga_class_type:yoga_class_types!class_type_id(
+                  duration_minutes
+                )
               )
             `)
-            .eq('yoga_class_participants.user_id', user.id)
-            .gt('scheduled_start_time', now)
-            .order('scheduled_start_time', { ascending: true })
-            .limit(1)
-            .single();
+            .eq('user_id', user.id);
+          
+          // Filter to only count classes that are in the past
+          const pastClasses = participatedClasses?.filter(participation => 
+            new Date(participation.scheduled_class.scheduled_start_time) < new Date()
+          ) || [];
+          
+          setClassesAttended(pastClasses.length);
+          
+          // Calculate total practice minutes from past classes only
+          const totalMinutes = pastClasses.reduce((total, participation) => {
+            return total + (participation.scheduled_class.yoga_class_type?.duration_minutes || 90);
+          }, 0);
+          
+          // Set practice minutes state
+          setPracticeMinutes(totalMinutes);
 
-          setNextClass(upcomingClass);
+          // Step 1: Get all class participations for this user
+          const { data: participations, error: participationsError } = await supabase
+            .from('yoga_class_participants')
+            .select('scheduled_class_id')
+            .eq('user_id', user.id);
+            
+          if (participationsError) {
+            console.error('Error fetching participations:', participationsError);
+            throw participationsError;
+          }
+          
+          // No upcoming classes if user hasn't registered for any
+          if (!participations || participations.length === 0) {
+            setNextClass(null);
+          } else {
+            // Step 2: Get all scheduled class IDs the user is registered for
+            const registeredClassIds = participations.map(p => p.scheduled_class_id);
+            
+            // Step 3: Find upcoming classes from those IDs
+            const { data: upcomingClasses, error: classesError } = await supabase
+              .from('yoga_scheduled_classes')
+              .select(`
+                id,
+                scheduled_start_time,
+                yoga_class_type:yoga_class_types!class_type_id(name, duration_minutes)
+              `)
+              .in('id', registeredClassIds)
+              .gte('scheduled_start_time', now)
+              .order('scheduled_start_time');
+              
+            if (classesError) {
+              console.error('Error fetching upcoming classes:', classesError);
+              throw classesError;
+            }
+            
+            console.log('Found upcoming classes:', upcomingClasses);
+            
+            // Set the next class if found
+            if (upcomingClasses && upcomingClasses.length > 0) {
+              // The first class in the list is the next upcoming one
+              const nextUpcomingClass = upcomingClasses[0];
+              
+              // Format it for our component
+              const upcomingClass = {
+                id: nextUpcomingClass.id,
+                scheduled_start_time: nextUpcomingClass.scheduled_start_time,
+                yoga_class_type: {
+                  name: nextUpcomingClass.yoga_class_type?.name || 'Yoga Class',
+                  duration_minutes: nextUpcomingClass.yoga_class_type?.duration_minutes || 90
+                }
+              };
+              
+              setNextClass(upcomingClass);
+            } else {
+              setNextClass(null);
+            }
+          }
         } catch (err) {
           console.log('Error fetching class data - might not be set up yet');
         }
@@ -207,7 +280,7 @@ export default function AccountPage() {
               </div>
               <div className="bg-forest-800/50 rounded-lg p-4">
                 <p className="text-earth-400 text-sm mb-1">Practice Minutes</p>
-                <p className="text-3xl font-bold text-earth-100">{classesAttended * 90}</p>
+                <p className="text-3xl font-bold text-earth-100">{practiceMinutes}</p>
               </div>
             </div>
           </motion.div>

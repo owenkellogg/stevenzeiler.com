@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLanguage } from '@/utils/i18n/LanguageProvider';
-import { fetchUpcomingYogaClasses } from '@/utils/supabase/yoga';
+import { fetchUpcomingYogaClasses, registerForClass } from '@/utils/supabase/yoga';
 import { YogaScheduledClassWithType } from '@/types/yoga';
 import { downloadICSFile } from '@/utils/icsGenerator';
 import { trackEvent } from '@/utils/analytics';
+import { createBrowserClient } from '@supabase/ssr';
 
 // Animation variants
 const fadeInUp = {
@@ -21,24 +23,38 @@ export default function YogaScheduleList() {
   const [classes, setClasses] = useState<YogaScheduledClassWithType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [registering, setRegistering] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+  
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
-  // Fetch upcoming yoga classes
+  // Fetch upcoming yoga classes and user data
   useEffect(() => {
-    async function loadUpcomingClasses() {
+    async function loadInitialData() {
       try {
         setIsLoading(true);
+        
+        // Get user data
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        
+        // Get upcoming classes
         const upcomingClasses = await fetchUpcomingYogaClasses();
         setClasses(upcomingClasses);
       } catch (err) {
-        console.error('Error fetching upcoming yoga classes:', err);
-        setError('Failed to load upcoming classes. Please try again later.');
+        console.error('Error fetching initial data:', err);
+        setError('Failed to load data. Please try again later.');
       } finally {
         setIsLoading(false);
       }
     }
     
-    loadUpcomingClasses();
-  }, []);
+    loadInitialData();
+  }, [supabase.auth]);
 
   // Format date and time
   const formatDate = (dateString: string) => {
@@ -201,12 +217,48 @@ export default function YogaScheduleList() {
                   </div>
                   
                   <div className="md:w-1/4 flex flex-col justify-end items-start md:items-end space-y-2">
-                    <Link
-                      href={`/yoga/scheduled?classId=${yogaClass.id}`}
-                      className="bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors text-center w-full md:w-auto"
+                    <button
+                      onClick={async () => {
+                        try {
+                          // Set the registering state to show loading
+                          setRegistering(yogaClass.id);
+                          
+                          if (!user) {
+                            // Redirect to login if not logged in
+                            router.push('/auth/sign-in?redirect=' + encodeURIComponent(`/yoga/scheduled?classId=${yogaClass.id}`));
+                            return;
+                          }
+                          
+                          // Track the event
+                          trackEvent('join_class', {
+                            classId: yogaClass.id,
+                            className: yogaClass.yoga_class_type.name,
+                            classTime: yogaClass.scheduled_start_time
+                          });
+                          
+                          // Register user for the class
+                          await registerForClass(yogaClass.id, {
+                            userId: user.id,
+                            userEmail: user.email,
+                            userName: user.user_metadata?.full_name || user.email
+                          });
+                          
+                          // Redirect to the class page
+                          router.push(`/yoga/scheduled?classId=${yogaClass.id}`);
+                        } catch (err) {
+                          console.error('Error registering for class:', err);
+                          setError('Failed to register for class. Please try again.');
+                        } finally {
+                          setRegistering(null);
+                        }
+                      }}
+                      disabled={registering === yogaClass.id}
+                      className={`bg-leaf-600 hover:bg-leaf-700 text-earth-50 px-4 py-2 rounded transition-colors text-center w-full md:w-auto ${
+                        registering === yogaClass.id ? 'opacity-75 cursor-wait' : ''
+                      }`}
                     >
-                      Join Class
-                    </Link>
+                      {registering === yogaClass.id ? 'Joining...' : 'Join Class'}
+                    </button>
                     
                     <button
                       onClick={() => handleAddToCalendar(yogaClass)}
