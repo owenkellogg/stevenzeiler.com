@@ -131,10 +131,22 @@ export default function Home() {
                   </audio>
                 </div>
               </div>
+              
 
               <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
                 <h3 className="text-xl font-semibold text-earth-100">90-Minute English Bikram Yoga</h3>
-                <p className="text-earth-300">Full-length Bikram class with English instructions.</p>
+                <p className="text-earth-300">Full-length Bikram class by Steven Zeiler.</p>
+                <div className="w-full">
+                  <audio controls className="w-full">
+                    <source src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//90_minute_bikram_method_yoga_steven_english.m4a" type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+
+              <div className="bg-forest-900/50 backdrop-blur-sm rounded-lg p-6 space-y-4 border border-forest-800">
+                <h3 className="text-xl font-semibold text-earth-100">90-Minute English Bikram Yoga</h3>
+                <p className="text-earth-300">Full-length Bikram class by Gary Olson.</p>
                 <div className="w-full">
                   <audio controls className="w-full">
                     <source src="https://jsltdgvipylqrgesphet.supabase.co/storage/v1/object/public/audio//90-minute-hot-yoga-bikram-yoga-english-with-gary-olson%20(1).mp3" type="audio/mpeg" />
